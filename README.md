@@ -35,7 +35,8 @@ Set up logging and monitoring to track model performance and system health.
 Implement alerts for any anomalies or performance degradation.
 Regularly update the system with new data and retrained models.
 
-Detailed Steps
+# Detailed Steps
+
 Step 1: Data Extraction
 Connect to the SQL database to extract historical sales data.
 Use APIs to fetch weather data (e.g., OpenWeather API), public holidays (e.g., Calendarific API), and social media trends (e.g., Twitter API).
@@ -74,7 +75,7 @@ Use tools like Prometheus and Grafana for monitoring.
 Set up logging with ELK stack (Elasticsearch, Logstash, Kibana) or a cloud-based solution like AWS CloudWatch.
 Regularly review system performance and make necessary adjustments.
 
-Tools and Technologies
+# Tools and Technologies
 
 Data Extraction: SQL, APIs (OpenWeather, Calendarific, Twitter)
 ETL: pandas, NumPy, Apache Airflow
