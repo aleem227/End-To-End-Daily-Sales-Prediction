@@ -17,10 +17,10 @@ EXPOSE 8080
 ENV PYTHONUNBUFFERED=1
 
 # Run the SQL query and subsequent scripts
-RUN python 1_sql_query.py && \
-    python 2_data-engineering.py && \
-    python 3_data_analysis.py && \
-    python 4_model_training.py
+RUN python sql_query.py && \
+    python data-engineering.py && \
+    python data_analysis.py && \
+    python model_training.py
 
 # Run pytest to execute tests
 RUN pytest /tests
