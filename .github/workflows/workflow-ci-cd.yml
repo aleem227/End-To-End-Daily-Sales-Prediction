@@ -1,60 +1,39 @@
-name: ML Pipeline CI-CD
+name: ML-sales-prediction
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: aleem227/sales_prediction
+  CI: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
-          python-version: '3.9'
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run SQL Query
-        run: python3 1_sql_query.py
-
-      - name: Run Data Engineering
-        run: python3 2_data_engineering.py
-
-      - name: Run Data Analysis
-        run: python3 3_data_analysis.py
-
-      - name: Run Model Training
-        run: python3 4_model_training.py
-
-      - name: Run Tests
-        run: pytest tests/
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          tag_name: 'v1.0.0'
-          release_name: 'New Model Release'
-          body: |
-            Release for the newly trained model.
-          draft: false
-          prerelease: false
+          images: ${{ env.IMAGE_NAME }}
 
-      - name: Upload Model
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./
-          asset_name: daily_sales_count_model.h5
-          asset_content_type: application/octet-stream
+          context: .
+          file: ./Dockerfile
+          cache-from: none
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:beta
+          labels: ${{ steps.meta.outputs.labels }}
