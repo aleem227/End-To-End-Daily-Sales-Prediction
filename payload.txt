@@ -1,0 +1,17 @@
+import requests
+import json
+
+url = "http://127.0.0.1:8000/predict/"
+
+payload = json.dumps({
+  "month": 5,
+  "day_of_week": 1,
+  "product_category_name": "dvds_blu_ray"
+})
+headers = {
+  'Content-Type': 'application/json'
+}
+
+response = requests.request("POST", url, headers=headers, data=payload)
+
+print(response.text)
