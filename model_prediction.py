@@ -48,6 +48,12 @@ available_products = [
     'portateis_cozinha_e_preparadores_de_alimentos'
 ]
 
+
+@app.get("/")
+def read_root():
+    return {"message": "App is working"}
+
+
 # Predict endpoint
 @app.post("/")
 def predict_sales(item: PredictionInput):

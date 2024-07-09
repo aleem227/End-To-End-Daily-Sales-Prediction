@@ -17,4 +17,4 @@ EXPOSE 8080
 ENV PYTHONUNBUFFERED=1
 
 # Run uvicorn when the container launches
-CMD ["uvicorn", "5_model_prediction:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
+CMD ["uvicorn", "model_prediction:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
