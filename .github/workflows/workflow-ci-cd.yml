@@ -1,0 +1,60 @@
+name: ML Pipeline CI-CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run SQL Query
+        run: python 1_sql_query.py
+
+      - name: Run Data Engineering
+        run: python 2_data_engineering.py
+
+      - name: Run Data Analysis
+        run: python 3_data_analysis.py
+
+      - name: Run Model Training
+        run: python 4_model_training.py
+
+      - name: Run Tests
+        run: pytest tests/
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: 'v1.0.0'
+          release_name: 'New Model Release'
+          body: |
+            Release for the newly trained model.
+          draft: false
+          prerelease: false
+
+      - name: Upload Model
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./path_to_your_trained_model_file
+          asset_name: daily_sales_count_model.h5
+          asset_content_type: application/octet-stream
