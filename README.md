@@ -85,7 +85,7 @@ Data Analysis: pandas, matplotlib, seaborn
 
 Model Building: scikit-learn, XGBoost, TensorFlow/PyTorch
 
-Model Deployment: Flask, FastAPI, Docker, Kubernetes
+Model Deployment: Flask, FastAPI, Docker, Github Actions, Kubernetes
 
 Continuous Training: Apache Airflow, Jenkins
 
