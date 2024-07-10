@@ -24,7 +24,7 @@ RUN python download_db.py && \
     python model_training.py
 
 # Run pytest to execute tests
-RUN pytest /tests
+RUN pytest tests/
 
 # Run uvicorn when the container launches
 CMD ["uvicorn", "model_prediction:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
