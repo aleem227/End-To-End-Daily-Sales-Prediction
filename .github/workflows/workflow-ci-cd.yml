@@ -37,3 +37,19 @@ jobs:
           push: true
           tags: ${{ env.IMAGE_NAME }}:beta
           labels: ${{ steps.meta.outputs.labels }}
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build  # Ensure 'build' job completes before running this
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      # Add a step to include your trained model file in release
+      - name: Include trained model in release
+        run: |
+          cp ./daily_sales_count_model.h5 $GITHUB_WORKSPACE/daily_sales_count_model.h5
+          echo "::set-output name=model_file::$GITHUB_WORKSPACE/daily_sales_count_model.h5"
+
+      # Optionally, you can add more release steps here
