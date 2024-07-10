@@ -38,16 +38,11 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:beta
           labels: ${{ steps.meta.outputs.labels }}
 
-  release:
-    runs-on: ubuntu-latest
-    needs: build  # Ensure 'build' job completes before running this
-
-    steps:
-      - name: Upload model.keras
-        uses: actions/upload-artifact@v2
-        with:
-          name: model
-          path: daily_sales_count_model.h5
+      # - name: Upload model.keras
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: model
+      #     path: ./
         
       - name: Create Release
         uses: marvinpinto/action-automatic-releases@latest
