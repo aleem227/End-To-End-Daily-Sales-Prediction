@@ -3,7 +3,7 @@ import os
 import pandas as pd
 
 # Define the path to the SQLite database file
-db_path = os.path.join('olist-sql', 'olist.sqlite')
+db_path = 'olist.sqlite'
 
 # Connect to the SQLite database
 conn = sqlite3.connect(db_path)
