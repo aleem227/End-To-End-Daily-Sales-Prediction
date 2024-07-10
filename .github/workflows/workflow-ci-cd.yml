@@ -43,13 +43,18 @@ jobs:
     needs: build  # Ensure 'build' job completes before running this
 
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-
-      # Add a step to include your trained model file in release
-      - name: Include trained model in release
-        run: |
-          cp ./daily_sales_count_model.h5 $GITHUB_WORKSPACE/daily_sales_count_model.h5
-          echo "::set-output name=model_file::$GITHUB_WORKSPACE/daily_sales_count_model.h5"
-
-      # Optionally, you can add more release steps here
+      - name: Upload model.keras
+        uses: actions/upload-artifact@v2
+        with:
+          name: model
+          path: daily_sales_count_model.h5
+        
+      - name: Create Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.PAT }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Model"
+          files: |
+            daily_sales_count_model.h5
