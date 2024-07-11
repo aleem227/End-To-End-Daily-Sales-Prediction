@@ -47,7 +47,6 @@ jobs:
           cache-from: none
           push: true
           tags: ${{ env.IMAGE_NAME }}:beta
-          labels: ${{ steps.meta.outputs.labels }}
 
   deploy:
     runs-on: ubuntu-latest
