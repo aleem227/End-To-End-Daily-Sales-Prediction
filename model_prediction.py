@@ -6,10 +6,6 @@ from tensorflow.keras.models import load_model
 import numpy as np
 from fastapi.middleware.cors import CORSMiddleware
 
-
-# Load the trained model
-model = load_model('daily_sales_count_model.h5')
-
 # Initialize FastAPI
 app = FastAPI()
 
@@ -21,6 +17,9 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
 )
+
+# Load the trained model
+model = load_model('daily_sales_count_model.h5')
 
 # Input data model
 class PredictionInput(BaseModel):
