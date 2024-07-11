@@ -55,7 +55,7 @@ model_sales.compile(optimizer=Adam(), loss='mean_squared_error')
 early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 
 # Train the model
-history_sales = model_sales.fit(X_train_sales_scaled, y_train_sales, epochs=20, batch_size=32, validation_data=(X_test_sales_scaled, y_test_sales), callbacks=[early_stopping])
+history_sales = model_sales.fit(X_train_sales_scaled, y_train_sales, epochs=2, batch_size=32, validation_data=(X_test_sales_scaled, y_test_sales), callbacks=[early_stopping])
 
 # Predict on test set
 y_pred_sales = model_sales.predict(X_test_sales_scaled).flatten()
