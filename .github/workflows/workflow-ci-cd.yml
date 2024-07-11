@@ -59,8 +59,8 @@ jobs:
         run: |
           gcloud auth activate-service-account --key-file <(echo "${{ secrets.GCP_KEY }}")
           gcloud compute ssh --zone "us-central1-f" "prediction-vm" --command "
-            sudo docker pull ${{ aleem227/sales_prediction }}:beta
+            sudo docker pull ${{ env.IMAGE_NAME }}:beta
             sudo docker stop sales_prediction || true
             sudo docker rm sales_prediction || true
-            sudo docker run -d --name sales_prediction -p 80:80 ${{ aleem227/sales_prediction }}:beta
+            sudo docker run -d --name sales_prediction -p 80:80 ${{ env.IMAGE_NAME }}:beta
           "
