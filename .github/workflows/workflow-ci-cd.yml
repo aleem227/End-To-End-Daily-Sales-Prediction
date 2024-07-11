@@ -47,20 +47,40 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
         with:
-          version: 'latest'
-          service_account_key: ${{ secrets.GCP_KEY }}
-          project_id: ${{ env.PROJECT_ID }}
-          export_default_credentials: true
+          credentials_json: '${{ secrets.gcp_credentials }}'
+  
+      - id: 'compute-ssh'
+        uses: 'google-github-actions/ssh-compute@v1'
+        with:
+          instance_name: 'prediction-vm'
+          zone: 'us-central1-f'
+          ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
+          command: |
+                sudo docker pull docker.io/aleem227/sales_prediction:beta
+                sudo docker stop sales_prediction || true
+                sudo docker rm sales_prediction || true
+                sudo docker run -d --name sales_prediction -p 8081:8080 docker.io/aleem227/sales_prediction:beta
+              
 
-      - name: Deploy to GCP VM
-        run: |
-          gcloud init
-          gcloud compute ssh prediction-vm --zone us-central1-f --command "
-            sudo docker pull docker.io/aleem227/sales_prediction:beta
-            sudo docker stop sales_prediction || true
-            sudo docker rm sales_prediction || true
-            sudo docker run -d --name sales_prediction -p 8081:8080 docker.io/aleem227/sales_prediction:beta
-          "
+
+
+      # - name: Install Google Cloud SDK
+      #   uses: google-github-actions/setup-gcloud@v1
+      #   with:
+      #     version: 'latest'
+      #     service_account_key: ${{ secrets.GCP_KEY }}
+      #     project_id: ${{ env.PROJECT_ID }}
+      #     export_default_credentials: true
+
+      # - name: Deploy to GCP VM
+      #   run: |
+      #     gcloud init
+      #     gcloud compute ssh prediction-vm --zone us-central1-f --command "
+      #       sudo docker pull docker.io/aleem227/sales_prediction:beta
+      #       sudo docker stop sales_prediction || true
+      #       sudo docker rm sales_prediction || true
+      #       sudo docker run -d --name sales_prediction -p 8081:8080 docker.io/aleem227/sales_prediction:beta
+      #     "
