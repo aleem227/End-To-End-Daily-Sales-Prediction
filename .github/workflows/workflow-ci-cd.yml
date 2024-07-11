@@ -6,7 +6,7 @@ on:
 
 env:
   IMAGE_NAME: aleem227/sales_prediction
-  PROJECT_ID: prediction-vm
+  PROJECT_ID: sales-prediction-vm
 
 jobs:
   build:
@@ -24,32 +24,33 @@ jobs:
           project_id: ${{ env.PROJECT_ID }}
           export_default_credentials: true
 
-      - name: Build Docker Image
-        run: docker build -t $IMAGE_NAME:latest .
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Configure Docker Client for GCR
-        run: |
-          gcloud auth configure-docker --quiet  # Configure Docker to use Google Cloud credentials for GCR
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.IMAGE_NAME }}
 
-      - name: Configure Docker Client for Artifact Registry
-        run: |
-          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet  # Configure Docker to use Google Cloud credentials for Artifact Registry in us-central1 region
-
-      - name: Push Docker Image to Container Registry (GCR)
-        run: |
-          docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
-          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
-
-      - name: Push Docker Image to Artifact Registry
-        run: |
-          docker tag $IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
-          docker push us-central1-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./Dockerfile
+          cache-from: none
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:beta
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Deploy to GCP VM
         run: |
           gcloud compute ssh --zone "us-central1-f" "prediction-vm" --command "
-            sudo docker pull gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
+            sudo docker pull docker.io/aleem227/sales_prediction:beta
             sudo docker stop sales_prediction || true
             sudo docker rm sales_prediction || true
-            sudo docker run -d --name sales_prediction -p 8081:8081 gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
+            sudo docker run -d --name sales_prediction -p 8081:8080 docker.io/aleem227/sales_prediction:beta
           "
