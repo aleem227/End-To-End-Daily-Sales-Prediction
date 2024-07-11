@@ -50,7 +50,7 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: '${{ secrets.gcp_credentials }}'
+          credentials_json: '${{ secrets.GCP_KEY }}'
   
       - id: 'compute-ssh'
         uses: 'google-github-actions/ssh-compute@v1'
@@ -63,10 +63,9 @@ jobs:
                 sudo docker stop sales_prediction || true
                 sudo docker rm sales_prediction || true
                 sudo docker run -d --name sales_prediction -p 8081:8080 docker.io/aleem227/sales_prediction:beta
+
+
               
-
-
-
       # - name: Install Google Cloud SDK
       #   uses: google-github-actions/setup-gcloud@v1
       #   with:
