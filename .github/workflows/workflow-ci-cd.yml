@@ -25,4 +25,4 @@ jobs:
         instance_name: 'prediction-vm'
         zone: 'us-central1-f'
         ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
-        command: 'touch /testfile'
+        command: 'sudo touch /testfile'
