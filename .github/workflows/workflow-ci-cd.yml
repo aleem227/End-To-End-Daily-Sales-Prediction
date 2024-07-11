@@ -9,7 +9,7 @@ env:
   PROJECT_ID: sales-prediction-vm
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
