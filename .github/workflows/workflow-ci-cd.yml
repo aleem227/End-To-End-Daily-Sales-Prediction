@@ -6,7 +6,7 @@ on:
 
 env:
   IMAGE_NAME: aleem227/sales_prediction
-  PROJECT_ID: prediction-vm
+  PROJECT_ID: devopsbyexample-325402
 
 jobs:
   build:
@@ -21,7 +21,6 @@ jobs:
         with:
           version: 'latest'
           project_id: ${{ env.PROJECT_ID }}
-          install_components: 'kubectl docker-credential-gcr'
 
       - name: Authenticate with Google Cloud SDK
         run: gcloud auth configure-docker --quiet && gcloud auth activate-service-account --key-file=${{ secrets.GCP_KEY }}
@@ -49,5 +48,5 @@ jobs:
             sudo docker pull gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
             sudo docker stop sales_prediction || true
             sudo docker rm sales_prediction || true
-            sudo docker run -d --name sales_prediction -p 8081:8080 gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
+            sudo docker run -d --name sales_prediction -p 80:80 gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
           "
