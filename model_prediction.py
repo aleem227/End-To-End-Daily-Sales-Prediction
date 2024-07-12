@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, conint
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import load_model
@@ -21,10 +21,10 @@ app.add_middleware(
 # Load the trained model
 model = load_model('daily_sales_count_model.h5')
 
-# Input data model
+# Input data model with constraints
 class PredictionInput(BaseModel):
-    month: int
-    day_of_week: int
+    month: conint(ge=0, le=11)  # Constrained to 0-11
+    day_of_week: conint(ge=0, le=6)  # Constrained to 0-6
     product_category_name: str
 
 # List of available product categories
@@ -47,11 +47,9 @@ available_products = [
     'portateis_cozinha_e_preparadores_de_alimentos'
 ]
 
-
 @app.get("/")
 def read_root():
     return {"message": "App is working"}
-
 
 # Predict endpoint
 @app.post("/")
@@ -100,7 +98,6 @@ def predict_sales(item: PredictionInput):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
 
 # Run the FastAPI server with Uvicorn
 if __name__ == "__main__":
