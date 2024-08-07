@@ -77,16 +77,14 @@ Regularly review system performance and make necessary adjustments.
 
 # Tools and Technologies
 
-Data Extraction: SQL, APIs (OpenWeather, Calendarific, Twitter)
+Data Extraction: SQL, APIs
 
-ETL: pandas, NumPy, Apache Airflow
+ETL: pandas, NumPy
 
 Data Analysis: pandas, matplotlib, seaborn
 
 Model Building: scikit-learn, XGBoost, TensorFlow/PyTorch
 
-Model Deployment: Flask, FastAPI, Docker, Github Actions, Kubernetes
+Model Deployment: FastAPI, Docker, Github Actions
 
-Continuous Training: Apache Airflow, Jenkins
-
-Monitoring: Prometheus, Grafana, ELK stack, AWS CloudWatch
+Continuous Training: Jenkins
